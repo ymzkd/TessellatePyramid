@@ -1,43 +1,43 @@
 import numpy as np
 import scipy.spatial as ss
-import numpy as np
 import random
 import math
+
 
 def transform_from3pt(pt0, pt1, pt2):
     matB = np.identity(4)
     e1 = pt1 - pt0
     e1 /= np.linalg.norm(e1)
     v02 = pt2 - pt0
-    e2 = v02 -  np.dot(v02, e1) * v02
+    e2 = v02 - np.dot(v02, e1) * v02
     e2 /= np.linalg.norm(e2)
-    e3 = np.cross(e1,e2)
-    matB[0:3,0] = e1
-    matB[0:3,1] = e2
-    matB[0:3,2] = e3
+    e3 = np.cross(e1, e2)
+    matB[0:3, 0] = e1
+    matB[0:3, 1] = e2
+    matB[0:3, 2] = e3
 
     matT = np.identity(4)
-    matT[3,0] = -pt0[0]
-    matT[3,1] = -pt0[1]
-    matT[3,2] = -pt0[2]
+    matT[3, 0] = -pt0[0]
+    matT[3, 1] = -pt0[1]
+    matT[3, 2] = -pt0[2]
 
     return matT @ matB
 
 
 def sqdistance(pt1, pt2):
-  return math.sqrt((pt1[0] - pt2[0])**2 + (pt1[1] - pt2[1])**2)
+    return math.sqrt((pt1[0] - pt2[0])**2 + (pt1[1] - pt2[1])**2)
 
 
 def divideby_distance(pt1, pt2, reflength):
-  dist = sqdistance(pt1, pt2)
-  vec12 = pt2 - pt1
-  div_num = int(dist/reflength) + 1
-  vec12 = vec12 / div_num
+    dist = sqdistance(pt1, pt2)
+    vec12 = pt2 - pt1
+    div_num = int(dist/reflength) + 1
+    vec12 = vec12 / div_num
 
-  points = []
-  for i in range(1, div_num):
-    points.append(pt1 + i * vec12)
-  return points
+    points = []
+    for i in range(1, div_num):
+        points.append(pt1 + i * vec12)
+        return points
 
 
 def randompts_inside_polygon(num: int, poly):
@@ -75,7 +75,7 @@ def tessellate_2d(poly, reflength: float):
         tess_points.append(pti) 
 
         # register edge (divided)
-        pt_next = poly[(i+1)%pts_num]
+        pt_next = poly[(i+1) % pts_num]
         tess_points += divideby_distance(pti, pt_next, reflength)
 
     # Inside
